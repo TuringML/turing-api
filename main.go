@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/turing-ml/turing-api/db"
-	"github.com/turing-ml/turing-api/server"
 	"os"
 	"strconv"
+
+	"github.com/turing-ml/turing-api/db"
+	"github.com/turing-ml/turing-api/server"
 )
 
 func main() {
