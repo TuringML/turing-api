@@ -7,8 +7,6 @@ COPY . .
 
 RUN mkdir -p ./bin && make build
 
-ENV GIN_MODE release
-
-EXPOSE 8080
+EXPOSE 8000
 
 CMD ["./bin/turing-api"]

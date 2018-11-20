@@ -7,5 +7,5 @@ import (
 const Version = "v0.0.1"
 
 func LongVersion() string {
-	return fmt.Sprintf("Turing APIs %s", Version)
+	return fmt.Sprintf("TuringML APIs %s", Version)
 }
