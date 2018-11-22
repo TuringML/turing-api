@@ -1,8 +1,9 @@
 package middlewares
 
 import (
-	"github.com/rs/zerolog/log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 func Logging(next http.Handler) http.Handler {

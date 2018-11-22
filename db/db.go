@@ -1,17 +1,21 @@
 package db
 
 import (
-	"database/sql"
-	"fmt"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/rs/zerolog/log"
+
+	mgo "gopkg.in/mgo.v2"
 )
 
-func Open(url, username, password, name string) (*sql.DB) {
-	cs := fmt.Sprintf("%s:%s@%s/%s", username, password, url, name)
-	db, err := sql.Open("mysql", cs)
+// Open creates a new connection to the selected database
+func Open(url, username, password, name string) *mgo.Database {
+	session, err := mgo.Dial(url)
 	if err != nil {
-		log.Panic().Err(err).Msg("could not connect to database")
+		log.Fatal().Err(err).Msg("could not connect to MongoDB server")
+	}
+	db := session.DB(name)
+	err = db.Login(username, password)
+	if err != nil {
+		log.Fatal().Err(err).Msg("could not connect to MongoDB database")
 	}
 	return db
 }

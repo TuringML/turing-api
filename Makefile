@@ -10,8 +10,8 @@ OS ?= linux
 ARCH ?= amd64
 
 build:
-	GOOS=$(OS) GOARCH=$(ARCH) go build -o bin/greeny -a -tags netgo -ldflags $(LDFLAGS)
-
+	GOOS=$(OS) GOARCH=$(ARCH) go build -o bin/turing -a -tags netgo -ldflags $(LDFLAGS)
+ 
 test:
 	@go test $(PKGS)
 

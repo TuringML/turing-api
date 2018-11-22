@@ -1,13 +1,27 @@
 version: '2.1'
 services:
-  mysql:
-    container_name: mysql
-    image: mysql:5.6
-    ports:
-    - "3306:3306"
+  api:
+    container_name: api
+    build: .
     environment:
-    - MYSQL_ROOT_PASSWORD=root
-    - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-    - MYSQL_DATABASE=turing
-    - MYSQL_USER=turing
-    - MYSQL_PASSWORD=turing
+      SECRET: sloth
+      DB_URL: "192.168.99.100"
+      DB_USER: turing
+      DB_PASSWORD: turing
+      DB_NAME: turing
+    ports:
+      - 8000:8000
+    depends_on:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: turing
+    ports:
+      - 27017:27017
+    volumes:
+       - ./data/db:/data
+       - ./mongo_docker:/docker-entrypoint-initdb.d
