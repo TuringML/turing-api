@@ -49,8 +49,16 @@ func (a *App) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 // UpdateUser updates the user's properties in the database
 func (a *App) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	var u models.User
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&u); err != nil {
+		Response(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer r.Body.Close()
+
 	vars := mux.Vars(r)
-	err := models.UpdateUser(*a.DB, vars["id"], "")
+	err := models.UpdateUser(*a.DB, vars["id"], u.Name)
 	if err != nil {
 		Response(w, http.StatusInternalServerError, err)
 	}
@@ -59,7 +67,8 @@ func (a *App) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 // DeleteUser deletes the specified user from the database
 func (a *App) DeleteUser(w http.ResponseWriter, r *http.Request) {
-	err := models.DeleteUser(*a.DB, "")
+	vars := mux.Vars(r)
+	err := models.DeleteUser(*a.DB, vars["id"])
 	if err != nil {
 		Response(w, http.StatusInternalServerError, err)
 	}

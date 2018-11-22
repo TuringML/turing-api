@@ -41,7 +41,20 @@ func (a *App) InitializeRoutes() {
 	a.Router.Use(middlewares.Logging)
 
 	a.Router.HandleFunc("/info", Info).Methods("GET")
-	a.Router.HandleFunc("/users", a.GetUsers).Methods("GET")
-	a.Router.HandleFunc("/users", a.CreateUser).Methods("POST")
-	a.Router.HandleFunc("/users/{id}", a.GetUser).Methods("GET")
+
+	// TODO: finish this
+	// a.Router.HandleFunc("/playgrounds", GetAllPlaygrounds).Methods("GET")
+
+	u := a.Router.PathPrefix("/users").Subrouter()
+	u.HandleFunc("/", a.GetUsers).Methods("GET")
+	u.HandleFunc("/", a.CreateUser).Methods("POST")
+	u.HandleFunc("/{id}", a.GetUser).Methods("GET")
+	u.HandleFunc("/{id}", a.UpdateUser).Methods("PUT")
+	u.HandleFunc("/{id}", a.DeleteUser).Methods("DELETE")
+
+	// TODO: finish these
+	// u.HandleFunc("/{id}/playgrounds", a.CreatePlaygrounds).Methods("POST")
+	// u.HandleFunc("/{id}/playgrounds/{playgroundId}", a.GetPlayground).Methods("GET")
+	// u.HandleFunc("/{id}/playgrounds/{playgroundId}", a.UpdatePlayground).Methods("PUT")
+	// u.HandleFunc("/{id}/playgrounds/{playgroundId}", a.DeletePlayground).Methods("DELETE")
 }
