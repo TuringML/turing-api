@@ -15,7 +15,7 @@ func Open(url, username, password, name string) *mgo.Database {
 	db := session.DB(name)
 	err = db.Login(username, password)
 	if err != nil {
-		log.Fatal().Err(err).Msg("could not connect to MongoDB database")
+		log.Fatal().Err(err).Msgf("could not login to MongoDB database %s", name)
 	}
 	return db
 }

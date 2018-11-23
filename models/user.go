@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -11,8 +13,10 @@ const (
 
 // User is the struct used to deal with the users in the database
 type User struct {
-	ID   bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
-	Name string        `json:"name" bson:"name"`
+	ID        bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
+	Name      string        `json:"name" bson:"name"`
+	CreatedAt time.Time     `json:"createdAt" bson:"created_at"`
+	UpdatedAt time.Time     `json:"updatedAt" bson:"updated_at"`
 }
 
 // GetUsers returns all the users from the database
@@ -36,18 +40,18 @@ func GetUser(db mgo.Database, ID string) (*User, error) {
 }
 
 // CreateUser creates a new user in the database
-func CreateUser(db mgo.Database, name string) error {
-	u := &User{Name: name}
+func CreateUser(db mgo.Database, name string) (*User, error) {
+	u := &User{Name: name, CreatedAt: time.Now(), UpdatedAt: time.Now()}
 	err := db.C(collectionUsers).Insert(u)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return u, nil
 }
 
 // UpdateUser updates the user's properties in the database
 func UpdateUser(db mgo.Database, ID, name string) error {
-	err := db.C(collectionUsers).UpdateId(bson.ObjectId(ID), name)
+	err := db.C(collectionUsers).UpdateId(bson.ObjectIdHex(ID), bson.M{"name": name, "updated_at": time.Now()})
 	if err != nil {
 		return err
 	}
@@ -56,7 +60,7 @@ func UpdateUser(db mgo.Database, ID, name string) error {
 
 // DeleteUser deletes the specified user from the database
 func DeleteUser(db mgo.Database, ID string) error {
-	err := db.C(collectionUsers).RemoveId(bson.ObjectId(ID))
+	err := db.C(collectionUsers).RemoveId(bson.ObjectIdHex(ID))
 	if err != nil {
 		return err
 	}
