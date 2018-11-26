@@ -41,6 +41,7 @@ func (a *App) InitializeRoutes() {
 	a.Router.Use(middlewares.Logging)
 
 	a.Router.HandleFunc("/info", Info).Methods("GET")
+	a.Router.HandleFunc("/docs", Endpoints).Methods("GET")
 
 	a.Router.HandleFunc("/playgrounds", a.GetAllPlaygrounds).Methods("GET")
 

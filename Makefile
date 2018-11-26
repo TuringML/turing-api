@@ -18,6 +18,9 @@ test:
 lint:
 	@for pkg in $(PKGS) ; do golint $$pkg ; done
 
+documentation:
+	@swagger -apiPackage="github.com/turing-ml/turing-api" -mainApiFile=main.go -output=./docs/API.md -format=markdown
+
 vet:
 	@go vet $(PKGS)
 
