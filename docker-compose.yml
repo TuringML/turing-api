@@ -1,18 +1,18 @@
 version: '2.1'
 services:
-  api:
-    container_name: api
-    build: .
-    environment:
-      SECRET: sloth
-      DB_URL: "192.168.99.100"
-      DB_USER: turing
-      DB_PASSWORD: turing
-      DB_NAME: turing
-    ports:
-      - 8000:8000
-    depends_on:
-      - mongo
+  # api:
+  #   container_name: api
+  #   build: .
+  #   environment:
+  #     SECRET: sloth
+  #     DB_URL: "192.168.99.100"
+  #     DB_USER: turing
+  #     DB_PASSWORD: turing
+  #     DB_NAME: turing
+  #   ports:
+  #     - 8000:8000
+  #   depends_on:
+  #     - mongo
   mongo:
     container_name: mongo
     image: mongo
@@ -25,3 +25,10 @@ services:
     volumes:
        - ./data/db:/data
        - ./mongo_docker:/docker-entrypoint-initdb.d
+  localstack:
+    image: localstack/localstack
+    container_name: localstack
+    ports:
+      - 4567-4580:4567-4580
+    environment:
+      - SERVICES=s3    
