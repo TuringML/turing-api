@@ -44,6 +44,7 @@ func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/docs", Endpoints).Methods("GET")
 
 	a.Router.HandleFunc("/playgrounds", a.GetAllPlaygrounds).Methods("GET")
+	a.Router.HandleFunc("/collectors", a.Collector).Methods("POST")
 
 	u := a.Router.PathPrefix("/users").Subrouter()
 	u.HandleFunc("/", a.GetUsers).Methods("GET")
