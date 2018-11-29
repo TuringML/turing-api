@@ -1,6 +1,8 @@
 package models
 
 import (
+	"io"
+	"os"
 	"strings"
 	"testing"
 
@@ -13,13 +15,13 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-func uploadObject(c *s3.S3, contentType, val string) error {
+func uploadObject(c *s3.S3, bucket, key, contentType string, b io.ReadSeeker) error {
 	// upload object
 	p := s3.PutObjectInput{
-		Bucket:      aws.String("bucket"),
-		Key:         aws.String("hello.json"),
+		Bucket:      aws.String(bucket),
+		Key:         aws.String(key),
 		ACL:         aws.String("public-read"),
-		Body:        strings.NewReader(val),
+		Body:        b,
 		ContentType: aws.String(contentType),
 	}
 
@@ -65,18 +67,60 @@ func setCollectorS3(region, bucketName string) (*Collectors, error) {
 	return c, nil
 }
 
-func TestS3GetFile(t *testing.T) {
+func TestS3GetFileJSON(t *testing.T) {
 	bucketName := "bucket"
 	region := "eu-west-1"
 
 	c, err := setCollectorS3(region, bucketName)
 	assert.Nil(t, err)
 
-	err = uploadObject(c.S3.Client, jsonContentType, `{"name":"hello"}`)
+	err = uploadObject(c.S3.Client, bucketName, "hello.json", jsonContentType, strings.NewReader(`{"name":"hello"}`))
 	assert.Nil(t, err)
 
 	f, err := c.GetFile()
 	assert.Nil(t, err)
 
 	assert.Equal(t, `[{"dimension":"name","type":"string","example":"hello"}]`, f)
+}
+
+func TestS3GetFileAVRO(t *testing.T) {
+	bucketName := "bucket"
+	region := "eu-west-1"
+
+	c, err := setCollectorS3(region, bucketName)
+	assert.Nil(t, err)
+
+	d, err := os.Open("../fixtures/test.avro")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = uploadObject(c.S3.Client, bucketName, "hello.avro", avroContentType, d)
+	assert.Nil(t, err)
+
+	f, err := c.GetFile()
+	assert.Nil(t, err)
+
+	assert.Equal(t, `[{"dimension":"name","type":"string","example":"hello"}]`, f)
+}
+
+func TestS3GetFileCSV(t *testing.T) {
+	bucketName := "bucket"
+	region := "eu-west-1"
+
+	c, err := setCollectorS3(region, bucketName)
+	assert.Nil(t, err)
+
+	d, err := os.Open("../fixtures/test.csv")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = uploadObject(c.S3.Client, bucketName, "test.csv", csvContentType, d)
+	assert.Nil(t, err)
+
+	f, err := c.GetFile()
+	assert.Nil(t, err)
+
+	assert.Equal(t, `[{"dimension":"id","type":"string","example":"1"},{"dimension":"name","type":"string","example":"hello"},{"dimension":"created_at","type":"string","example":"2018-11-01T10:00:00Z"}]`, f)
 }
