@@ -1,12 +1,33 @@
-## How to start
+# TuringML API
 
-Run `docker-compose up -d --build` and you will be able to spin up both the APIs and MongoDB. 
-The user that will be used to run all the queries is:
+### How to run the APIs
 
+I assume you have docker installed and you are using a Mac. 
+In you terminal, go to the root of the project and then type:
+
+```bash
+$: cd api/
+$: make build
+$: make docker-image
 ```
-username: turing
-password: turing
-db: turing
+
+The image will be created under this name `turingml/api`.
+To run the container use the following:
+
+```bash
+$: docker run --rm -it -p 8080:8080 turingml/api
 ```
 
-very simple. The Authentication mechanism used is `SCRAM-SHA-1` and it's the default choice.
+In the Docker Image, **Gin** is set up in `release` mode. If you don't want
+such a thing, you can change it with `debug` or comment it out.
+
+## Vault initialization
+
+Exec into vault with `docker exec -it vault sh`. Run the following:
+
+```bash
+$: vault status
+$: vault operator init  // store the Root key and the unsealing keys
+$: vault operator unseal // repeat this command 3 times
+$: vault login // insert the root key
+```
