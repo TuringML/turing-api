@@ -19,7 +19,7 @@ import (
 // @Param   node_id     path    string     true        "The node ID"
 // @Success 200 {array} models.Link Array of Links
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{node_id}/fields [get]
+// @Router /playgrounds/{playground_id}/nodes/{node_id}/fields [get]
 func GetFields(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
@@ -47,7 +47,7 @@ func GetFields(c *gin.Context) {
 // @Param   field_id     path    string     true        "The field ID"
 // @Success 200 {object} models.Field Field object
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{node_id}/fields/{field_id} [get]
+// @Router /playgrounds/{playground_id}/nodes/{node_id}/fields/{field_id} [get]
 func GetField(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
@@ -80,10 +80,14 @@ func GetField(c *gin.Context) {
 // @Param   node_id     path    string     true        "The node ID"
 // @Success 200 {object} models.Field Field object
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{node_id}/fields [post]
+// @Router /playgrounds/{playground_id}/nodes/{node_id}/fields [post]
 func CreateField(c *gin.Context) {
 	var f models.Field
-	// todo: fix post
+	err := c.BindJSON(&f)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)
+		return
+	}
 
 	db := c.MustGet("DB").(*gorm.DB)
 
@@ -111,10 +115,14 @@ func CreateField(c *gin.Context) {
 // @Param   field_id     path    string     true        "The field ID"
 // @Success 200 {string} string "field updated"
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{node_id}/fields/{field_id} [put]
+// @Router /playgrounds/{playground_id}/nodes/{node_id}/fields/{field_id} [put]
 func UpdateField(c *gin.Context) {
 	var f models.Field
-	// todo: fix put
+	err := c.BindJSON(&f)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)
+		return
+	}
 
 	db := c.MustGet("DB").(*gorm.DB)
 
@@ -148,7 +156,7 @@ func UpdateField(c *gin.Context) {
 // @Param   field_id     path    string     true        "The field ID"
 // @Success 200 {string} string "link deleted"
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{node_id}/fields/{field_id} [delete]
+// @Router /playgrounds/{playground_id}/nodes/{node_id}/fields/{field_id} [delete]
 func DeleteField(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 

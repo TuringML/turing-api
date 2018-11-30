@@ -19,11 +19,11 @@ import (
 // @Param   id     path    string     true        "The playground ID"
 // @Success 200 {array} models.Node Array of Nodes
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes [get]
+// @Router /playgrounds/{playground_id}/nodes [get]
 func GetNodes(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
-	playgroundID, err := strconv.Atoi(c.Param("id"))
+	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -46,17 +46,17 @@ func GetNodes(c *gin.Context) {
 // @Param   nodeId     path    string     true        "The node ID"
 // @Success 200 {object} models.Node Node object
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{nodeId} [get]
+// @Router /playgrounds/{playground_id}/nodes/{node_id} [get]
 func GetNode(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
-	playgroundID, err := strconv.Atoi(c.Param("id"))
+	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
 
-	nodeID, err := strconv.Atoi(c.Param("nodeId"))
+	nodeID, err := strconv.Atoi(c.Param("node_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -78,14 +78,18 @@ func GetNode(c *gin.Context) {
 // @Param   id     path    string     true        "The playground ID"
 // @Success 200 {object} models.Node Node object
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{nodeId} [post]
+// @Router /playgrounds/{playground_id}/nodes [post]
 func CreateNode(c *gin.Context) {
 	var n models.Node
-	// todo: fix post
+	err := c.BindJSON(&n)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)
+		return
+	}
 
 	db := c.MustGet("DB").(*gorm.DB)
 
-	playgroundID, err := strconv.Atoi(c.Param("id"))
+	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -108,20 +112,24 @@ func CreateNode(c *gin.Context) {
 // @Param   nodeId     path    string     true        "The node ID"
 // @Success 200 {string} string "node updated"
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{nodeId} [put]
+// @Router /playgrounds/{playground_id}/nodes/{node_id} [put]
 func UpdateNode(c *gin.Context) {
 	var n models.Node
-	// todo: fix put
+	err := c.BindJSON(&n)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)
+		return
+	}
 
 	db := c.MustGet("DB").(*gorm.DB)
 
-	playgroundID, err := strconv.Atoi(c.Param("id"))
+	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
 
-	nodeID, err := strconv.Atoi(c.Param("nodeId"))
+	nodeID, err := strconv.Atoi(c.Param("node_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -144,17 +152,17 @@ func UpdateNode(c *gin.Context) {
 // @Param   nodeId     path    string     true        "The node ID"
 // @Success 200 {string} string "node deleted"
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{nodeId} [put]
+// @Router /playgrounds/{playground_id}/nodes/{node_id} [put]
 func DeleteNode(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
-	playgroundID, err := strconv.Atoi(c.Param("id"))
+	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
 
-	nodeID, err := strconv.Atoi(c.Param("nodeId"))
+	nodeID, err := strconv.Atoi(c.Param("node_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return

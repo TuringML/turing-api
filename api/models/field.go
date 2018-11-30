@@ -51,26 +51,43 @@ type Field struct {
 }
 
 // GetFields returns all the fields of a node
-func GetFields(db *gorm.DB, nodeID int) ([]Node, error) {
-	return nil, nil
+func GetFields(db *gorm.DB, nodeID int) ([]Field, error) {
+	var fields []Field
+	if err := db.Where("node_id = ?", nodeID).Find(&fields).Error; err != nil {
+		return nil, err
+	}
+	return fields, nil
 }
 
 // GetField returns a single field from given an ID of a single node
-func GetField(db *gorm.DB, nodeID, ID int) (*Node, error) {
-	return nil, nil
+func GetField(db *gorm.DB, nodeID, ID int) (*Field, error) {
+	var field Field
+	if err := db.Where("id = ? AND node_id = ?", ID, nodeID).Find(&field).Error; err != nil {
+		return nil, err
+	}
+	return &field, nil
 }
 
 // CreateField creates a new Field in the node
-func CreateField(db *gorm.DB, nodeID int, f Field) (*Node, error) {
-	return nil, nil
+func CreateField(db *gorm.DB, nodeID int, f Field) (*Field, error) {
+	if err := db.Create(&f).Error; err != nil {
+		return nil, err
+	}
+	return &f, nil
 }
 
 // UpdateField updates the information of the field specified by the ID
 func UpdateField(db *gorm.DB, nodeID, ID int, f Field) error {
+	if err := db.Where("id = ? AND node_id = ?", ID, nodeID).Save(&f).Error; err != nil {
+		return err
+	}
 	return nil
 }
 
 // DeleteField deletes the field specified by the ID
 func DeleteField(db *gorm.DB, nodeID, ID int) error {
+	if err := db.Where("id = ? AND node_id = ?", ID, nodeID).Delete(Field{}).Error; err != nil {
+		return err
+	}
 	return nil
 }

@@ -19,7 +19,7 @@ import (
 // @Param   node_id     path    string     true        "The node ID"
 // @Success 200 {array} models.Link Array of Links
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{node_id}/links [get]
+// @Router /playgrounds/{playground_id}/nodes/{node_id}/links [get]
 func GetLinks(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
@@ -47,7 +47,7 @@ func GetLinks(c *gin.Context) {
 // @Param   link_id     path    string     true        "The link ID"
 // @Success 200 {object} models.Link Link object
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{node_id}/links/{link_id} [get]
+// @Router /playgrounds/{playground_id}/nodes/{node_id}/links/{link_id} [get]
 func GetLink(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
@@ -74,10 +74,14 @@ func GetLink(c *gin.Context) {
 // @Param   node_id     path    string     true        "The node ID"
 // @Success 200 {object} models.Link Link object
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{node_id}/links [post]
+// @Router /playgrounds/{playground_id}/nodes/{node_id}/links [post]
 func CreateLink(c *gin.Context) {
 	var l models.Link
-	// todo: fix post
+	err := c.BindJSON(&l)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)
+		return
+	}
 
 	db := c.MustGet("DB").(*gorm.DB)
 	link, err := models.CreateLink(db, l)
@@ -98,10 +102,14 @@ func CreateLink(c *gin.Context) {
 // @Param   link_id     path    string     true        "The link ID"
 // @Success 200 {string} string "link updated"
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{node_id}/links/{link_id} [put]
+// @Router /playgrounds/{playground_id}/nodes/{node_id}/links/{link_id} [put]
 func UpdateLink(c *gin.Context) {
 	var l models.Link
-	// todo: fix put
+	err := c.BindJSON(&l)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)
+		return
+	}
 
 	db := c.MustGet("DB").(*gorm.DB)
 
@@ -129,7 +137,7 @@ func UpdateLink(c *gin.Context) {
 // @Param   link_id     path    string     true        "The link ID"
 // @Success 200 {string} string "link deleted"
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /playgrounds/{id}/nodes/{node_id}/links/{link_id} [delete]
+// @Router /playgrounds/{playground_id}/nodes/{node_id}/links/{link_id} [delete]
 func DeleteLink(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 

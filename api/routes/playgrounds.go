@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/turing-ml/turing-api/api/models"
 
@@ -18,10 +19,12 @@ import (
 // @Param   id     path    string     true        "The user ID"
 // @Success 200 {array} models.Playground Array of playgrounds
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /users/{id}/playgrounds [get]
+// @Router /playgrounds [get]
 func GetPlaygrounds(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
-	playground, err := models.GetPlaygrounds(db, c.Param("id"))
+
+	// TODO: fix me with auth0 id
+	playground, err := models.GetPlaygrounds(db, "auth0|id")
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -38,10 +41,17 @@ func GetPlaygrounds(c *gin.Context) {
 // @Param   playground_id     path    string     true        "The playground ID"
 // @Success 200 {object} models.Playground
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /users/{user_id}/playgrounds/{playground_id} [get]
+// @Router /playgrounds/{playground_id} [get]
 func GetPlayground(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
-	playground, err := models.GetPlayground(db, c.Param("id"), c.Param("playgroundId"))
+
+	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
+	if err != nil {
+		utils.ResponseError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	playground, err := models.GetPlayground(db, "auth0|id", playgroundID)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -58,13 +68,17 @@ func GetPlayground(c *gin.Context) {
 // @Param   name     query    string     true        "The playground name"
 // @Success 200 {object} models.Playground
 // @Failure 500 {string} string	"Internal Server Error"
-// @Router /users/{user_id}/playgrounds [post]
+// @Router /playgrounds [post]
 func CreatePlayground(c *gin.Context) {
 	var p models.Playground
-	// todo: fix post
+	err := c.BindJSON(&p)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)
+		return
+	}
 
 	db := c.MustGet("DB").(*gorm.DB)
-	playground, err := models.CreatePlayground(db, c.Param("id"), p.Name)
+	playground, err := models.CreatePlayground(db, "auth0|id", p)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -85,10 +99,20 @@ func CreatePlayground(c *gin.Context) {
 // @Router /users/{user_id}/playgrounds/{playground_id} [put]
 func UpdatePlayground(c *gin.Context) {
 	var p models.Playground
-	// todo: fix put
+	err := c.BindJSON(&p)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)
+		return
+	}
 
 	db := c.MustGet("DB").(*gorm.DB)
-	err := models.UpdatePlayground(db, c.Param("id"), c.Param("playgroundId"), p.Name)
+	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
+	if err != nil {
+		utils.ResponseError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	err = models.UpdatePlayground(db, "auth0|", playgroundID, p)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -108,7 +132,13 @@ func UpdatePlayground(c *gin.Context) {
 // @Router /users/{user_id}/playgrounds/{playground_id} [delete]
 func DeletePlayground(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
-	err := models.DeletePlayground(db, c.Param("id"), c.Param("playgroundId"))
+	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
+	if err != nil {
+		utils.ResponseError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	err = models.DeletePlayground(db, "auth0|", playgroundID)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
