@@ -50,19 +50,13 @@ func GetNodes(c *gin.Context) {
 func GetNode(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
-	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
-	if err != nil {
-		utils.ResponseError(c, http.StatusInternalServerError, err)
-		return
-	}
-
 	nodeID, err := strconv.Atoi(c.Param("node_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
 
-	node, err := models.GetNode(db, playgroundID, nodeID)
+	node, err := models.GetNode(db, nodeID)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -89,13 +83,7 @@ func CreateNode(c *gin.Context) {
 
 	db := c.MustGet("DB").(*gorm.DB)
 
-	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
-	if err != nil {
-		utils.ResponseError(c, http.StatusInternalServerError, err)
-		return
-	}
-
-	node, err := models.CreateNode(db, playgroundID, n)
+	node, err := models.CreateNode(db, &n)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -123,19 +111,7 @@ func UpdateNode(c *gin.Context) {
 
 	db := c.MustGet("DB").(*gorm.DB)
 
-	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
-	if err != nil {
-		utils.ResponseError(c, http.StatusInternalServerError, err)
-		return
-	}
-
-	nodeID, err := strconv.Atoi(c.Param("node_id"))
-	if err != nil {
-		utils.ResponseError(c, http.StatusInternalServerError, err)
-		return
-	}
-
-	err = models.UpdateNode(db, playgroundID, nodeID, n)
+	err = models.UpdateNode(db, &n)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -156,19 +132,13 @@ func UpdateNode(c *gin.Context) {
 func DeleteNode(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
-	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
-	if err != nil {
-		utils.ResponseError(c, http.StatusInternalServerError, err)
-		return
-	}
-
 	nodeID, err := strconv.Atoi(c.Param("node_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
 
-	err = models.DeleteNode(db, playgroundID, nodeID)
+	err = models.DeleteNode(db, nodeID)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return

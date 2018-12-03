@@ -7,7 +7,7 @@ import (
 )
 
 // OpenConnection will open up the connection with the MySQL database
-func OpenConnection(dbUsername, dbPassword, dbHost, dbName string) *gorm.DB {
+func OpenConnection(dbUsername, dbPassword, dbHost, dbName string, debug bool) *gorm.DB {
 	dbURL := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True", dbUsername, dbPassword, dbHost, dbName)
 
 	db, err := gorm.Open("mysql", dbURL)
@@ -15,7 +15,7 @@ func OpenConnection(dbUsername, dbPassword, dbHost, dbName string) *gorm.DB {
 		panic(err)
 	}
 
-	db.LogMode(true)
+	db.LogMode(debug)
 	db.DB().SetMaxIdleConns(10)
 
 	return db

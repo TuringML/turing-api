@@ -51,7 +51,7 @@ func GetPlayground(c *gin.Context) {
 		return
 	}
 
-	playground, err := models.GetPlayground(db, "auth0|id", playgroundID)
+	playground, err := models.GetPlayground(db, playgroundID)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -78,7 +78,7 @@ func CreatePlayground(c *gin.Context) {
 	}
 
 	db := c.MustGet("DB").(*gorm.DB)
-	playground, err := models.CreatePlayground(db, "auth0|id", p)
+	playground, err := models.CreatePlayground(db, &p)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -112,7 +112,16 @@ func UpdatePlayground(c *gin.Context) {
 		return
 	}
 
-	err = models.UpdatePlayground(db, "auth0|", playgroundID, p)
+	pDB, err := models.GetPlayground(db, playgroundID)
+	if err != nil {
+		utils.ResponseError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	// update only ID here
+	p.ID = pDB.ID
+
+	err = models.UpdatePlayground(db, &p)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -138,7 +147,7 @@ func DeletePlayground(c *gin.Context) {
 		return
 	}
 
-	err = models.DeletePlayground(db, "auth0|", playgroundID)
+	err = models.DeletePlayground(db, playgroundID)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return

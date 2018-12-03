@@ -51,19 +51,13 @@ func GetFields(c *gin.Context) {
 func GetField(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
-	nodeID, err := strconv.Atoi(c.Param("node_id"))
-	if err != nil {
-		utils.ResponseError(c, http.StatusInternalServerError, err)
-		return
-	}
-
 	fieldID, err := strconv.Atoi(c.Param("field_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
 
-	field, err := models.GetField(db, nodeID, fieldID)
+	field, err := models.GetField(db, fieldID)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -91,13 +85,7 @@ func CreateField(c *gin.Context) {
 
 	db := c.MustGet("DB").(*gorm.DB)
 
-	nodeID, err := strconv.Atoi(c.Param("node_id"))
-	if err != nil {
-		utils.ResponseError(c, http.StatusInternalServerError, err)
-		return
-	}
-
-	field, err := models.CreateField(db, nodeID, f)
+	field, err := models.CreateField(db, f)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -126,19 +114,7 @@ func UpdateField(c *gin.Context) {
 
 	db := c.MustGet("DB").(*gorm.DB)
 
-	nodeID, err := strconv.Atoi(c.Param("node_id"))
-	if err != nil {
-		utils.ResponseError(c, http.StatusInternalServerError, err)
-		return
-	}
-
-	fieldID, err := strconv.Atoi(c.Param("field_id"))
-	if err != nil {
-		utils.ResponseError(c, http.StatusInternalServerError, err)
-		return
-	}
-
-	err = models.UpdateField(db, nodeID, fieldID, f)
+	err = models.UpdateField(db, f)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -160,19 +136,13 @@ func UpdateField(c *gin.Context) {
 func DeleteField(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
-	nodeID, err := strconv.Atoi(c.Param("node_id"))
-	if err != nil {
-		utils.ResponseError(c, http.StatusInternalServerError, err)
-		return
-	}
-
 	fieldID, err := strconv.Atoi(c.Param("field_id"))
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
 
-	err = models.DeleteField(db, nodeID, fieldID)
+	err = models.DeleteField(db, fieldID)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return

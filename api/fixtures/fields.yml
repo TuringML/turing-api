@@ -1,0 +1,56 @@
+# fields.yml
+- id: 1
+  node_id: 1
+  active: true
+  key_id: ip_address
+  key_name: IP Address
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "127.0.0.1"
+  # value_kind: 
+  # value_delimiter:  
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 2
+  node_id: 1
+  active: true
+  key_id: timestamp
+  key_name: Date time
+  key_primary: true
+  value_class: Timestamp
+  value_type: RFC3339
+  value_example: "2018-08-12T16:37:00.Z000"
+  # value_kind: 
+  # value_delimiter:  
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 3
+  node_id: 2
+  active: true
+  key_id: segments
+  key_name: IAB Segments
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "iab-1,iab-2"
+  value_kind: array
+  value_delimiter: ","
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 4
+  node_id: 2
+  active: true
+  key_id: agency
+  key_name: Agency
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "google,gacebook"
+  value_kind: array
+  value_delimiter: "," 
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()

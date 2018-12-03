@@ -1,0 +1,5 @@
+# configurations.yml
+- id: 1
+  blob: "test blob"
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()

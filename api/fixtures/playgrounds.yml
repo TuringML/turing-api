@@ -1,0 +1,12 @@
+# playground.yml
+- id: 1
+  user_id: "auth0|123"
+  name: playground 1
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 2
+  user_id: "auth0|456"
+  name: playground 2
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()

@@ -2,33 +2,12 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/turing-ml/turing-api/api/middleware"
-	"github.com/turing-ml/turing-api/api/models"
 	"github.com/turing-ml/turing-api/api/routes"
+	"github.com/turing-ml/turing-api/api/utils"
 	"github.com/turing-ml/turing-api/pkg/database"
 	"github.com/turing-ml/turing-api/pkg/vault"
 )
-
-func runMigration(db *gorm.DB) {
-
-	db.AutoMigrate(
-		&models.Node{}, &models.Playground{},
-		&models.Link{}, &models.Field{},
-		&models.Configuration{},
-	)
-
-	// BUG in AutoMigrate. Forced to run the foreign key manually
-	// These lines will lead to an error when starting the APIs but I can safely ignore it
-	db.Model(&models.Playground{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
-	db.Model(&models.Field{}).AddForeignKey("node_id", "nodes(id)", "CASCADE", "CASCADE")
-	db.Model(&models.Link{}).AddForeignKey("from_node_id", "nodes(id)", "CASCADE", "CASCADE")
-	db.Model(&models.Link{}).AddForeignKey("from_field_id", "fields(id)", "CASCADE", "CASCADE")
-	db.Model(&models.Link{}).AddForeignKey("to_node_id", "nodes(id)", "CASCADE", "CASCADE")
-	db.Model(&models.Link{}).AddForeignKey("to_field_id", "fields(id)", "CASCADE", "CASCADE")
-	db.Model(&models.Node{}).AddForeignKey("playground_id", "playgrounds(id)", "CASCADE", "CASCADE")
-	db.Model(&models.Node{}).AddForeignKey("configuration_id", "configurations(id)", "CASCADE", "CASCADE")
-}
 
 // SetupRouter defines all the endpoints of the APIs
 func SetupRouter(secret, dbUsername, dbPassword, dbHost, dbName, vaultToken, vaultAddr string) *gin.Engine {
@@ -39,8 +18,8 @@ func SetupRouter(secret, dbUsername, dbPassword, dbHost, dbName, vaultToken, vau
 	v := vault.New(vaultToken, vaultAddr)
 
 	// Database migrations
-	db := database.OpenConnection(dbUsername, dbPassword, dbHost, dbName)
-	runMigration(db)
+	db := database.OpenConnection(dbUsername, dbPassword, dbHost, dbName, true)
+	utils.RunMigration(db)
 
 	// Set up Middleware
 	r.Use(middleware.Vault(v))

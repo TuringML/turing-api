@@ -113,13 +113,7 @@ func UpdateLink(c *gin.Context) {
 
 	db := c.MustGet("DB").(*gorm.DB)
 
-	linkID, err := strconv.Atoi(c.Param("link_id"))
-	if err != nil {
-		utils.ResponseError(c, http.StatusInternalServerError, err)
-		return
-	}
-
-	err = models.UpdateLink(db, linkID, l)
+	err = models.UpdateLink(db, l)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
