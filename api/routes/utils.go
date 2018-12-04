@@ -24,7 +24,9 @@ var outputTemplate = template.Must(template.New("base").Parse(`
 
 // Version returns the APIs version
 func Version(c *gin.Context) {
-	utils.Response(c, http.StatusOK, version.LongVersion())
+	utils.Response(c, http.StatusOK, map[string]string{
+		"version": version.LongVersion(),
+	})
 }
 
 // Endpoints will return the documentation regarding each endpoint

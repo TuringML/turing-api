@@ -30,7 +30,7 @@ func GetFields(c *gin.Context) {
 	}
 
 	nodes, err := models.GetFields(db, nodeID)
-	if err != nil {
+	if err != nil && !gorm.IsRecordNotFoundError(err) {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
@@ -52,7 +52,7 @@ func GetField(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 
 	fieldID, err := strconv.Atoi(c.Param("field_id"))
-	if err != nil {
+	if err != nil && !gorm.IsRecordNotFoundError(err) {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
@@ -83,9 +83,18 @@ func CreateField(c *gin.Context) {
 		return
 	}
 
+	nodeID, err := strconv.Atoi(c.Param("node_id"))
+	if err != nil {
+		utils.ResponseError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	// Update node ID
+	f.NodeID = uint(nodeID)
+
 	db := c.MustGet("DB").(*gorm.DB)
 
-	field, err := models.CreateField(db, f)
+	field, err := models.CreateField(db, &f)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -112,9 +121,18 @@ func UpdateField(c *gin.Context) {
 		return
 	}
 
+	nodeID, err := strconv.Atoi(c.Param("node_id"))
+	if err != nil {
+		utils.ResponseError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	// Update node ID
+	f.NodeID = uint(nodeID)
+
 	db := c.MustGet("DB").(*gorm.DB)
 
-	err = models.UpdateField(db, f)
+	err = models.UpdateField(db, &f)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return

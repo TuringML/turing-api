@@ -30,7 +30,7 @@ func GetNodes(c *gin.Context) {
 	}
 
 	nodes, err := models.GetNodes(db, playgroundID)
-	if err != nil {
+	if err != nil && !gorm.IsRecordNotFoundError(err) {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
@@ -57,7 +57,7 @@ func GetNode(c *gin.Context) {
 	}
 
 	node, err := models.GetNode(db, nodeID)
-	if err != nil {
+	if err != nil && !gorm.IsRecordNotFoundError(err) {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
@@ -80,6 +80,15 @@ func CreateNode(c *gin.Context) {
 		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)
 		return
 	}
+
+	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
+	if err != nil {
+		utils.ResponseError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	// Set playground ID in object
+	n.PlaygroundID = uint(playgroundID)
 
 	db := c.MustGet("DB").(*gorm.DB)
 
@@ -109,8 +118,16 @@ func UpdateNode(c *gin.Context) {
 		return
 	}
 
-	db := c.MustGet("DB").(*gorm.DB)
+	playgroundID, err := strconv.Atoi(c.Param("playground_id"))
+	if err != nil {
+		utils.ResponseError(c, http.StatusInternalServerError, err)
+		return
+	}
 
+	// Set playground ID in object
+	n.PlaygroundID = uint(playgroundID)
+
+	db := c.MustGet("DB").(*gorm.DB)
 	err = models.UpdateNode(db, &n)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)

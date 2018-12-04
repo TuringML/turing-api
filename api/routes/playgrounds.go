@@ -16,7 +16,6 @@ import (
 // @Description Get all the playgrounds based on the user ID
 // @Accept  json
 // @Produce  json
-// @Param   id     path    string     true        "The user ID"
 // @Success 200 {array} models.Playground Array of playgrounds
 // @Failure 500 {string} string	"Internal Server Error"
 // @Router /playgrounds [get]
@@ -25,7 +24,7 @@ func GetPlaygrounds(c *gin.Context) {
 
 	// TODO: fix me with auth0 id
 	playground, err := models.GetPlaygrounds(db, "auth0|id")
-	if err != nil {
+	if err != nil && !gorm.IsRecordNotFoundError(err) {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
@@ -37,7 +36,6 @@ func GetPlaygrounds(c *gin.Context) {
 // @Description Get a specific playground based on the ID in input of a single user
 // @Accept  json
 // @Produce  json
-// @Param   user_id     path    string     true        "The user ID"
 // @Param   playground_id     path    string     true        "The playground ID"
 // @Success 200 {object} models.Playground
 // @Failure 500 {string} string	"Internal Server Error"
@@ -52,7 +50,7 @@ func GetPlayground(c *gin.Context) {
 	}
 
 	playground, err := models.GetPlayground(db, playgroundID)
-	if err != nil {
+	if err != nil && !gorm.IsRecordNotFoundError(err) {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
@@ -64,7 +62,6 @@ func GetPlayground(c *gin.Context) {
 // @Description Create a new playground based on the parameters in input
 // @Accept  json
 // @Produce  json
-// @Param   user_id     path    string     true        "The user ID"
 // @Param   name     query    string     true        "The playground name"
 // @Success 200 {object} models.Playground
 // @Failure 500 {string} string	"Internal Server Error"
@@ -76,6 +73,9 @@ func CreatePlayground(c *gin.Context) {
 		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)
 		return
 	}
+
+	// TODO: Fulfill the UserID information by reading the JWT token
+	// ...
 
 	db := c.MustGet("DB").(*gorm.DB)
 	playground, err := models.CreatePlayground(db, &p)
@@ -91,7 +91,6 @@ func CreatePlayground(c *gin.Context) {
 // @Description Update the playground of a specific user
 // @Accept  json
 // @Produce  json
-// @Param   user_id     path    string     true        "The user ID"
 // @Param   playground_id     path    string     true        "The playground ID"
 // @Param   name     query    string     true        "The playground name"
 // @Success 200 {string} string	"playground updated"
@@ -134,7 +133,6 @@ func UpdatePlayground(c *gin.Context) {
 // @Description Delete the playground of a specific user
 // @Accept  json
 // @Produce  json
-// @Param   user_id     path    string     true        "The user ID"
 // @Param   playground_id     path    string     true        "The playground ID"
 // @Success 200 {string} string	"playground deleted"
 // @Failure 500 {string} string	"Internal Server Error"

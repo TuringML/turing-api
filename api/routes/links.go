@@ -30,7 +30,7 @@ func GetLinks(c *gin.Context) {
 	}
 
 	nodes, err := models.GetLinks(db, nodeID)
-	if err != nil {
+	if err != nil && !gorm.IsRecordNotFoundError(err) {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
@@ -58,7 +58,7 @@ func GetLink(c *gin.Context) {
 	}
 
 	link, err := models.GetLink(db, linkID)
-	if err != nil {
+	if err != nil && !gorm.IsRecordNotFoundError(err) {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
 	}
@@ -84,7 +84,7 @@ func CreateLink(c *gin.Context) {
 	}
 
 	db := c.MustGet("DB").(*gorm.DB)
-	link, err := models.CreateLink(db, l)
+	link, err := models.CreateLink(db, &l)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
@@ -113,7 +113,7 @@ func UpdateLink(c *gin.Context) {
 
 	db := c.MustGet("DB").(*gorm.DB)
 
-	err = models.UpdateLink(db, l)
+	err = models.UpdateLink(db, &l)
 	if err != nil {
 		utils.ResponseError(c, http.StatusInternalServerError, err)
 		return
