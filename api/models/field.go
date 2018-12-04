@@ -40,7 +40,7 @@ type Field struct {
 	Node           Node   `gorm:"foreignkey:NodeID"`
 	NodeID         uint   `json:"nodeId"`
 	Active         bool   `json:"active"`
-	KeyID          int    `json:"key_id"`
+	KeyID          string `json:"key_id"`
 	KeyName        string `json:"key_name"`
 	KeyPrimary     bool   `json:"key_primary"`
 	ValueClass     Class  `json:"value_class" sql:"not null;type:ENUM('DIMENSION', 'TIMESTAMP', 'METRIC')"`
@@ -69,15 +69,15 @@ func GetField(db *gorm.DB, ID int) (*Field, error) {
 }
 
 // CreateField creates a new Field in the node
-func CreateField(db *gorm.DB, f Field) (*Field, error) {
+func CreateField(db *gorm.DB, f *Field) (*Field, error) {
 	if err := db.Create(&f).Error; err != nil {
 		return nil, err
 	}
-	return &f, nil
+	return f, nil
 }
 
 // UpdateField updates the information of the field specified by the ID
-func UpdateField(db *gorm.DB, f Field) error {
+func UpdateField(db *gorm.DB, f *Field) error {
 	if err := db.Save(&f).Error; err != nil {
 		return err
 	}
