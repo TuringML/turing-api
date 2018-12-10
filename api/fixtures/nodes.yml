@@ -19,6 +19,26 @@
   created_at: RAW=NOW()
   updated_at: RAW=NOW()
 
+- id: 3
+  playground_id: 1
+  active: true
+  type: "Enricher"
+  name: "Bar enricher"
+  x_coordinate: "300.0"
+  y_coordinate: "450.0"
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 4
+  playground_id: 1
+  active: true
+  type: "Enricher"
+  name: "Foo enricher"
+  x_coordinate: "3.0"
+  y_coordinate: "4.0"
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
 - id: 15
   playground_id: 1
   active: true

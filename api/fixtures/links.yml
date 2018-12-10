@@ -1,0 +1,26 @@
+- id: 1
+  from_node_id: 4
+  from_field_id: 6
+  to_node_id: 2
+  to_field_id: 3
+  type: 'OUTPUT'
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 2
+  from_node_id: 3
+  from_field_id: 5
+  to_node_id: 1
+  to_field_id: 1
+  type: 'INPUT'
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 3
+  from_node_id: 2
+  from_field_id: 4
+  to_node_id: 1
+  to_field_id: 1
+  type: 'INPUT'
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()  

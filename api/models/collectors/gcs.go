@@ -5,8 +5,6 @@ import (
 	"io"
 	"log"
 
-	"golang.org/x/oauth2/google"
-
 	"cloud.google.com/go/storage"
 	"github.com/pkg/errors"
 	"google.golang.org/api/option"
@@ -26,7 +24,7 @@ func (g *GCloudStore) NewClient() {
 	ctx := context.Background()
 
 	// Creates a client.
-	client, err := storage.NewClient(ctx, option.WithCredentials(&google.Credentials{}))
+	client, err := storage.NewClient(ctx, option.WithCredentials(nil))
 	if err != nil {
 		log.Fatal(err)
 	}

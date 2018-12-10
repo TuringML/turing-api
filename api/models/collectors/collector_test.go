@@ -65,6 +65,7 @@ func setCollectorS3(region, bucketName string) (*Collectors, error) {
 	// set up mock client
 	c.S3.Client = s3Client
 	return c, nil
+
 }
 
 func TestS3GetFileJSON(t *testing.T) {
@@ -77,10 +78,10 @@ func TestS3GetFileJSON(t *testing.T) {
 	err = uploadObject(c.S3.Client, bucketName, "hello.json", jsonContentType, strings.NewReader(`{"name":"hello"}`))
 	assert.Nil(t, err)
 
-	f, err := c.GetFile()
+	f, err := c.PreviewFile()
 	assert.Nil(t, err)
 
-	assert.Equal(t, `[{"dimension":"name","type":"string","example":"hello"}]`, f)
+	assert.Equal(t, `[{"dimension":"username","type":"string","example":"Name of the user account on Twitter.com"},{"dimension":"tweet","type":"string","example":"The content of the user's Twitter message"},{"dimension":"timestamp","type":"long","example":"Unix epoch time in milliseconds"}]`, f)
 }
 
 func TestS3GetFileAVRO(t *testing.T) {
@@ -98,7 +99,7 @@ func TestS3GetFileAVRO(t *testing.T) {
 	err = uploadObject(c.S3.Client, bucketName, "hello.avro", avroContentType, d)
 	assert.Nil(t, err)
 
-	f, err := c.GetFile()
+	f, err := c.PreviewFile()
 	assert.Nil(t, err)
 
 	assert.Equal(t, `[{"dimension":"name","type":"string","example":"hello"}]`, f)
@@ -119,7 +120,7 @@ func TestS3GetFileCSV(t *testing.T) {
 	err = uploadObject(c.S3.Client, bucketName, "test.csv", csvContentType, d)
 	assert.Nil(t, err)
 
-	f, err := c.GetFile()
+	f, err := c.PreviewFile()
 	assert.Nil(t, err)
 
 	assert.Equal(t, `[{"dimension":"id","type":"string","example":"1"},{"dimension":"name","type":"string","example":"hello"},{"dimension":"created_at","type":"string","example":"2018-11-01T10:00:00Z"}]`, f)

@@ -11,6 +11,7 @@ import (
 
 // SetupRouter defines all the endpoints of the APIs
 func SetupRouter(secret, dbUsername, dbPassword, dbHost, dbName, vaultToken, vaultAddr string) *gin.Engine {
+
 	r := gin.Default()
 	r.RedirectTrailingSlash = true
 

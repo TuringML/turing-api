@@ -50,19 +50,32 @@ func TestGetLink(t *testing.T) {
 func TestCreateLink(t *testing.T) {
 	router.POST("/playgrounds/:playground_id/nodes/:node_id/links", CreateLink)
 
-	/*
-	   FromNodeID:  uint(1),
-	   FromFieldID: uint(1),
-	   ToNodeID:    uint(2),
-	   ToFieldID:   uint(4),
-	*/
-
-	reqBody := `{
-		"from_node_id": 1,
-		"from_field_id": 1,
-		"to_node_id": 2,
-		"to_field_id": 4
-	}`
+	reqBody := `
+	{
+		"links": {
+			"inputs": [{
+				"from": {
+					"node_id": 1,
+					"field_id": 1
+				},
+				"to": {
+					"node_id": 2,
+					"field_id": 4
+				}
+			}],
+			"output": {
+				"from": {
+					"node_id": 2,
+					"field_id": 3
+				},
+				"to": {
+					"node_id": 3,
+					"field_id": 5
+				}
+			}
+		}
+	}
+	`
 
 	code, body, err := MockRequest(http.MethodPost, "/playgrounds/1/nodes/1/links", strings.NewReader(reqBody))
 	if err != nil {
@@ -83,12 +96,32 @@ func TestCreateLink(t *testing.T) {
 func TestUpdateLink(t *testing.T) {
 	router.PUT("/playgrounds/:playground_id/nodes/:node_id/links/:link_id", UpdateLink)
 
-	reqBody := `{
-		"from_node_id": 1,
-		"from_field_id": 3,
-		"to_node_id": 2,
-		"to_field_id": 4
-	}`
+	reqBody := `
+	{
+		"links": {
+			"inputs": [{
+				"from": {
+					"node_id": 1,
+					"field_id": 1
+				},
+				"to": {
+					"node_id": 2,
+					"field_id": 4
+				}
+			}],
+			"output": {
+				"from": {
+					"node_id": 2,
+					"field_id": 3
+				},
+				"to": {
+					"node_id": 4,
+					"field_id": 6
+				}
+			}
+		}
+	}
+	`
 
 	code, body, err := MockRequest(http.MethodPut, "/playgrounds/1/nodes/1/links/1", strings.NewReader(reqBody))
 	if err != nil {

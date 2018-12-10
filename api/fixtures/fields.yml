@@ -54,3 +54,31 @@
   value_delimiter: "," 
   created_at: RAW=NOW()
   updated_at: RAW=NOW()
+
+- id: 5
+  node_id: 3
+  active: true
+  key_id: agency
+  key_name: Agency
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "google,gacebook"
+  value_kind: array
+  value_delimiter: "," 
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 6
+  node_id: 4
+  active: true
+  key_id: agency
+  key_name: Agency
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "google,gacebook"
+  value_kind: array
+  value_delimiter: "," 
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()  

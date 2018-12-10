@@ -76,7 +76,7 @@ func GetLink(c *gin.Context) {
 // @Failure 500 {string} string	"Internal Server Error"
 // @Router /playgrounds/{playground_id}/nodes/{node_id}/links [post]
 func CreateLink(c *gin.Context) {
-	var l models.Link
+	var l models.Links
 	err := c.BindJSON(&l)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)
@@ -104,7 +104,7 @@ func CreateLink(c *gin.Context) {
 // @Failure 500 {string} string	"Internal Server Error"
 // @Router /playgrounds/{playground_id}/nodes/{node_id}/links/{link_id} [put]
 func UpdateLink(c *gin.Context) {
-	var l models.Link
+	var l models.Links
 	err := c.BindJSON(&l)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind)

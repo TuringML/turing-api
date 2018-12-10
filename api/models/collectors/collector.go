@@ -35,8 +35,8 @@ type Collectors struct {
 	ApacheKafka   *ApacheKafka   `json:"kafka"`
 }
 
-// GetFile returns the list of files of a collector
-func (c *Collectors) GetFile() (string, error) {
+// PreviewFile returns the list of files of a collector
+func (c *Collectors) PreviewFile() (string, error) {
 	// var files []string
 	if c.S3 != nil {
 		files, err := c.S3.ListFiles()

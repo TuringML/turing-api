@@ -22,7 +22,7 @@ func TestMain(m *testing.M) {
 
 func tearUp() {
 	// access as root and create testing db
-	testDb = database.OpenConnection("root", "root", "192.168.99.100", "", false)
+	testDb = database.OpenConnection("root", "root", "127.0.0.1", "", false)
 
 	testDb = testDb.Exec("CREATE DATABASE IF NOT EXISTS testing")
 	testDb = testDb.Exec("USE testing")
@@ -49,16 +49,16 @@ func runMigration() {
 
 	testDb.AutoMigrate(
 		&Node{}, &Playground{},
-		&Link{}, &Field{},
+		&LinkGorm{}, &Field{},
 		&Configuration{},
 	)
 
 	// BUG in AutoMigrate. Forced to run the foreign key manually
 	// These lines will lead to an error when starting the APIs but I can safely ignore it
 	testDb.Model(&Field{}).AddForeignKey("node_id", "nodes(id)", "CASCADE", "CASCADE")
-	testDb.Model(&Link{}).AddForeignKey("from_node_id", "nodes(id)", "CASCADE", "CASCADE")
-	testDb.Model(&Link{}).AddForeignKey("from_field_id", "fields(id)", "CASCADE", "CASCADE")
-	testDb.Model(&Link{}).AddForeignKey("to_node_id", "nodes(id)", "CASCADE", "CASCADE")
-	testDb.Model(&Link{}).AddForeignKey("to_field_id", "fields(id)", "CASCADE", "CASCADE")
+	testDb.Model(&LinkGorm{}).AddForeignKey("from_node_id", "nodes(id)", "CASCADE", "CASCADE")
+	testDb.Model(&LinkGorm{}).AddForeignKey("from_field_id", "fields(id)", "CASCADE", "CASCADE")
+	testDb.Model(&LinkGorm{}).AddForeignKey("to_node_id", "nodes(id)", "CASCADE", "CASCADE")
+	testDb.Model(&LinkGorm{}).AddForeignKey("to_field_id", "fields(id)", "CASCADE", "CASCADE")
 	testDb.Model(&Node{}).AddForeignKey("playground_id", "playgrounds(id)", "CASCADE", "CASCADE")
 }

@@ -272,11 +272,6 @@ Get all the playgrounds based on the user ID
 
 
 
-| Param Name | Param Type | Data Type | Description | Required? |
-|-----|-----|-----|-----|-----|
-| id | path | string | The user ID | Yes |
-
-
 | Code | Type | Model | Message |
 |-----|-----|-----|-----|
 | 200 | array | [Playground](#github.com.turing-ml.turing-api.api.models.Playground) |  |
@@ -294,7 +289,6 @@ Create a new playground based on the parameters in input
 
 | Param Name | Param Type | Data Type | Description | Required? |
 |-----|-----|-----|-----|-----|
-| user_id | path | string | The user ID | Yes |
 | name | query | string | The playground name | Yes |
 
 
@@ -315,7 +309,6 @@ Get a specific playground based on the ID in input of a single user
 
 | Param Name | Param Type | Data Type | Description | Required? |
 |-----|-----|-----|-----|-----|
-| user_id | path | string | The user ID | Yes |
 | playground_id | path | string | The playground ID | Yes |
 
 
@@ -449,7 +442,7 @@ Deletes a single node in the playground given the ID
 | DeletedAt | Time |  |
 | ID | uint |  |
 | UpdatedAt | Time |  |
-| blob | github.com.turing-ml.turing-api.api.models.JSON |  |
+| blob | array |  |
 
 <a name="github.com.turing-ml.turing-api.api.models.Field"></a>
 
@@ -463,7 +456,7 @@ Deletes a single node in the playground given the ID
 | Node | github.com.turing-ml.turing-api.api.models.Node |  |
 | UpdatedAt | Time |  |
 | active | bool |  |
-| key_id | int |  |
+| key_id | string |  |
 | key_name | string |  |
 | key_primary | bool |  |
 | nodeId | uint |  |
@@ -473,12 +466,14 @@ Deletes a single node in the playground given the ID
 | value_kind | string |  |
 | value_type | string |  |
 
-<a name="github.com.turing-ml.turing-api.api.models.JSON"></a>
+<a name="github.com.turing-ml.turing-api.api.models.Input"></a>
 
-#### JSON
+#### Input
 
 | Field Name (alphabetical) | Field Type | Description |
 |-----|-----|-----|
+| from | github.com.turing-ml.turing-api.api.models.from |  |
+| to | github.com.turing-ml.turing-api.api.models.to |  |
 
 <a name="github.com.turing-ml.turing-api.api.models.Link"></a>
 
@@ -486,18 +481,8 @@ Deletes a single node in the playground given the ID
 
 | Field Name (alphabetical) | Field Type | Description |
 |-----|-----|-----|
-| CreatedAt | Time |  |
-| DeletedAt | Time |  |
-| FromField | github.com.turing-ml.turing-api.api.models.Field |  |
-| FromNode | github.com.turing-ml.turing-api.api.models.Node |  |
-| ID | uint |  |
-| ToField | github.com.turing-ml.turing-api.api.models.Field |  |
-| ToNode | github.com.turing-ml.turing-api.api.models.Node |  |
-| UpdatedAt | Time |  |
-| from_field_id | uint |  |
-| from_node_id | uint |  |
-| to_field_id | uint |  |
-| to_node_id | uint |  |
+| inputs | array |  |
+| output | github.com.turing-ml.turing-api.api.models.Output |  |
 
 <a name="github.com.turing-ml.turing-api.api.models.Node"></a>
 
@@ -506,18 +491,27 @@ Deletes a single node in the playground given the ID
 | Field Name (alphabetical) | Field Type | Description |
 |-----|-----|-----|
 | Configuration | github.com.turing-ml.turing-api.api.models.Configuration |  |
+| ConfigurationID | uint |  |
 | CreatedAt | Time |  |
 | DeletedAt | Time |  |
 | ID | uint |  |
 | Playground | github.com.turing-ml.turing-api.api.models.Playground |  |
 | UpdatedAt | Time |  |
 | active | bool |  |
-| configuration_id | uint |  |
 | name | string |  |
 | playground_id | uint |  |
-| type | string |  |
+| type | github.com.turing-ml.turing-api.api.models.Type |  |
 | x | float64 |  |
 | y | float64 |  |
+
+<a name="github.com.turing-ml.turing-api.api.models.Output"></a>
+
+#### Output
+
+| Field Name (alphabetical) | Field Type | Description |
+|-----|-----|-----|
+| from | from |  |
+| to | to |  |
 
 <a name="github.com.turing-ml.turing-api.api.models.Playground"></a>
 
@@ -529,21 +523,33 @@ Deletes a single node in the playground given the ID
 | DeletedAt | Time |  |
 | ID | uint |  |
 | UpdatedAt | Time |  |
-| User | github.com.turing-ml.turing-api.api.models.User |  |
 | name | string |  |
 | user_id | string |  |
 
-<a name="github.com.turing-ml.turing-api.api.models.User"></a>
+<a name="github.com.turing-ml.turing-api.api.models.Type"></a>
 
-#### User
+#### Type
 
 | Field Name (alphabetical) | Field Type | Description |
 |-----|-----|-----|
-| CreatedAt | Time |  |
-| DeletedAt | Time |  |
-| ID | uint |  |
-| UpdatedAt | Time |  |
-| name | string |  |
+
+<a name="github.com.turing-ml.turing-api.api.models.from"></a>
+
+#### from
+
+| Field Name (alphabetical) | Field Type | Description |
+|-----|-----|-----|
+| field_id | int |  |
+| node_id | int |  |
+
+<a name="github.com.turing-ml.turing-api.api.models.to"></a>
+
+#### to
+
+| Field Name (alphabetical) | Field Type | Description |
+|-----|-----|-----|
+| field_id | int |  |
+| node_id | int |  |
 
 
 <a name="users"></a>
@@ -581,7 +587,6 @@ Update the playground of a specific user
 
 | Param Name | Param Type | Data Type | Description | Required? |
 |-----|-----|-----|-----|-----|
-| user_id | path | string | The user ID | Yes |
 | playground_id | path | string | The playground ID | Yes |
 | name | query | string | The playground name | Yes |
 
@@ -603,7 +608,6 @@ Delete the playground of a specific user
 
 | Param Name | Param Type | Data Type | Description | Required? |
 |-----|-----|-----|-----|-----|
-| user_id | path | string | The user ID | Yes |
 | playground_id | path | string | The playground ID | Yes |
 
 

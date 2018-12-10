@@ -36,7 +36,7 @@ func tearUp() {
 	router.RedirectTrailingSlash = true
 
 	// Testing Database
-	testDb = database.OpenConnection("root", "root", "192.168.99.100", "", false)
+	testDb = database.OpenConnection("root", "root", "127.0.0.1", "", false)
 
 	testDb = testDb.Exec("CREATE DATABASE IF NOT EXISTS testing")
 	testDb = testDb.Exec("USE testing")

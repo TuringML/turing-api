@@ -53,7 +53,7 @@ func TestGetAllPlaygrounds(t *testing.T) {
 	if err != nil {
 		t.Errorf("TestGetAllPlaygrounds failed with error %v", err)
 	}
-	assert.Equal(t, 3, len(ps))
+	assert.Equal(t, 4, len(ps))
 }
 
 func TestUpdatePlayground(t *testing.T) {
