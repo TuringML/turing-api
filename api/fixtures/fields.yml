@@ -81,4 +81,118 @@
   value_kind: array
   value_delimiter: "," 
   created_at: RAW=NOW()
+  updated_at: RAW=NOW() 
+
+# ---------
+
+- id: 7
+  node_id: 16
+  active: true
+  key_id: agency
+  key_name: Agency
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "google,gacebook"
+  value_kind: array
+  value_delimiter: "," 
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW() 
+
+- id: 8
+  node_id: 17
+  active: true
+  key_id: agency
+  key_name: Agency
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "google,gacebook"
+  value_kind: array
+  value_delimiter: "," 
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW() 
+
+- id: 9
+  node_id: 17
+  active: true
+  key_id: agency
+  key_name: Agency
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "google,gacebook"
+  value_kind: array
+  value_delimiter: "," 
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW() 
+
+- id: 10
+  node_id: 18
+  active: true
+  key_id: agency
+  key_name: Agency
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "google,gacebook"
+  value_kind: array
+  value_delimiter: "," 
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW() 
+
+- id: 11
+  node_id: 18
+  active: true
+  key_id: agency
+  key_name: Agency
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "google,gacebook"
+  value_kind: array
+  value_delimiter: "," 
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW() 
+
+- id: 12
+  node_id: 19
+  active: true
+  key_id: agency
+  key_name: Agency
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "google,gacebook"
+  value_kind: array
+  value_delimiter: "," 
+  created_at: RAW=NOW()
   updated_at: RAW=NOW()  
+
+- id: 13
+  node_id: 19
+  active: true
+  key_id: agency
+  key_name: Agency
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "google,gacebook"
+  value_kind: array
+  value_delimiter: "," 
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW() 
+
+- id: 14
+  node_id: 20
+  active: true
+  key_id: agency
+  key_name: Agency
+  key_primary: false
+  value_class: Dimension
+  value_type: string
+  value_example: "google,gacebook"
+  value_kind: array
+  value_delimiter: "," 
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW() 

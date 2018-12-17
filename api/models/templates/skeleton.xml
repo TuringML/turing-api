@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<template encoding-version="1.2">
+    <description>{{ description }}</description>
+    <groupId>{{ groupId }}</groupId>
+    <name>{{ name }}</name>
+    <snippet>
+    {{ snippet }}
+    </snippet>
+    <timestamp>{{ timestamp }}</timestamp>
+</template>

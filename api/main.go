@@ -36,6 +36,7 @@ func SetupRouter(secret, dbUsername, dbPassword, dbHost, dbName, vaultToken, vau
 	p.GET("/:id", routes.GetPlayground)
 	p.PUT("/:id", routes.UpdatePlayground)
 	p.DELETE("/:id", routes.DeletePlayground)
+	p.PUT("/:id/play", routes.Play)
 
 	// Nodes Endpoints
 	p.GET("/:id/nodes", routes.GetNodes)

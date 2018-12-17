@@ -48,3 +48,55 @@
   y_coordinate: "45.0"  
   created_at: RAW=NOW()
   updated_at: RAW=NOW()
+
+# ---------
+
+- id: 16
+  playground_id: 4
+  active: true
+  type: "Collector"
+  name: "s3 collector"
+  x_coordinate: "30.0"
+  y_coordinate: "45.0"  
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 17
+  playground_id: 4
+  active: true
+  type: "Enricher"
+  name: "ip enricher"
+  x_coordinate: "30.0"
+  y_coordinate: "45.0"  
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 18
+  playground_id: 4
+  active: true
+  type: "Enricher"
+  name: "ip enricher"
+  x_coordinate: "30.0"
+  y_coordinate: "45.0"  
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 19
+  playground_id: 4
+  active: true
+  type: "Storer"
+  name: "s3 storer"
+  x_coordinate: "30.0"
+  y_coordinate: "45.0"  
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+
+- id: 20
+  playground_id: 4
+  active: true
+  type: "Collector"
+  name: "adl collector"
+  x_coordinate: "30.0"
+  y_coordinate: "45.0"  
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()

@@ -50,17 +50,17 @@ func (c *Collectors) PreviewFile() (string, error) {
 		return previewFile(r, ct)
 	}
 
-	if c.GCloudStore != nil {
-		files, err := c.GCloudStore.ListFiles()
-		if err != nil {
-			return "", err
-		}
-		r, ct, err := c.GCloudStore.GetFirstValidObject(files)
-		if err != nil {
-			return "", err
-		}
-		return previewFile(r, ct)
-	}
+	// if c.GCloudStore != nil {
+	// 	files, err := c.GCloudStore.ListFiles()
+	// 	if err != nil {
+	// 		return "", err
+	// 	}
+	// 	r, ct, err := c.GCloudStore.GetFirstValidObject(files)
+	// 	if err != nil {
+	// 		return "", err
+	// 	}
+	// 	return previewFile(r, ct)
+	// }
 
 	// if c.AzureDataLake != nil {
 	// 	files, err := c.AzureDataLake.ListFiles()

@@ -40,6 +40,40 @@ func (c Type) Value() (driver.Value, error) {
 	return string(c), nil
 }
 
+// SubType specifies which sub category the component is
+type SubType string
+
+const (
+	// S3SubType for both collector and storer
+	S3SubType SubType = "S3"
+	// GCSSubType for both collector and storer
+	GCSSubType SubType = "GCS"
+	// ADLSubType for both collector and storer
+	ADLSubType SubType = "ADL"
+	// KafkaSubType for both collector and storer
+	KafkaSubType SubType = "KAFKA"
+	// IPSubType for the GeoIP enricher
+	IPSubType SubType = "IP"
+	// MetaEnricherSubType for the meta enricher component
+	MetaEnricherSubType SubType = "META-ENRICHER"
+	//TODO: specify Intellectors SubTypes when necessary
+)
+
+// Scan scans the values in the current class
+func (c *SubType) Scan(value interface{}) error {
+	asBytes, ok := value.([]byte)
+	if !ok {
+		return errors.New("scan source is not []byte")
+	}
+	*c = SubType(string(asBytes))
+	return nil
+}
+
+// Value returns the string representation of the dirver value
+func (c SubType) Value() (driver.Value, error) {
+	return string(c), nil
+}
+
 // Node represents a generic node in the playground canvas
 type Node struct {
 	gorm.Model
@@ -47,6 +81,7 @@ type Node struct {
 	PlaygroundID    uint       `json:"playground_id"`
 	Active          bool       `json:"active"`
 	Type            Type       `json:"type" sql:"not null;type:ENUM('COLLECTOR', 'ENRICHER', 'JOINER', 'OPERATOR', 'INTELLECTOR', 'STORER')"`
+	SubType         SubType    `json:"sub_type" sql:"not null;type:ENUM('S3', 'GCS', 'ADL', 'KAFKA', 'IP', 'META-ENRICHER')"`
 	Name            string     `json:"name"`
 	XCoordinate     float64    `json:"x"`
 	YCoordinate     float64    `json:"y"`
@@ -94,4 +129,10 @@ func DeleteNode(db *gorm.DB, ID int) error {
 		return err
 	}
 	return nil
+}
+
+// NodeGraph describe the "vertex" in the DAG
+type NodeGraph struct {
+	Node   *Node
+	Fields []Field
 }
