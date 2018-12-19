@@ -1002,6 +1002,6 @@
             <type>org.apache.nifi.processors.aws.s3.FetchS3Object</type>
         </processors>
     </contents>
-    <name>S3_Avro-collector</name>
+    <name>S3_AVRO-collector</name>
     <variables/>
 </processGroups>

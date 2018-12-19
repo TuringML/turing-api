@@ -23,4 +23,10 @@
   user_id: "auth0|469"
   name: playground 4
   created_at: RAW=NOW()
-  updated_at: RAW=NOW()  
+  updated_at: RAW=NOW()
+
+- id: 5
+  user_id: "auth0|uiert"
+  name: playground 5
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()

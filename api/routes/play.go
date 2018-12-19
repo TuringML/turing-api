@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -34,7 +35,10 @@ func Play(c *gin.Context) {
 		return
 	}
 
-	traverseDAG(g)
+	template := traverseDAG(g)
+
+	// send to Apache NiFi
+	fmt.Print(template)
 
 	utils.Response(c, http.StatusOK, g.String())
 }
@@ -102,7 +106,7 @@ func buildVertex(node models.Node, fields []models.Field) *dag.Vertex {
 	return dag.NewVertex(strconv.Itoa(int(node.ID)), ng)
 }
 
-func traverseDAG(g *dag.DAG) {
+func traverseDAG(g *dag.DAG) *models.Template {
 
 	template := models.NewTemplate("test")
 
@@ -122,4 +126,5 @@ func traverseDAG(g *dag.DAG) {
 			}
 		}
 	}
+	return template
 }

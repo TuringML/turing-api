@@ -1,4 +1,4 @@
-package collectors
+package models
 
 // AzureDataLake is the object that can be used to get/store files
 type AzureDataLake struct {

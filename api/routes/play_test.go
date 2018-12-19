@@ -11,7 +11,7 @@ import (
 func TestPlay(t *testing.T) {
 	router.PUT("/playgrounds/:playground_id/play", Play)
 
-	code, body, err := MockRequest(http.MethodPut, "/playgrounds/4/play", nil)
+	code, body, err := MockRequest(http.MethodPut, "/playgrounds/5/play", nil)
 	if err != nil {
 		t.FailNow()
 	}

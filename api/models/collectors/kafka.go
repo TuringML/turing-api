@@ -1,4 +1,4 @@
-package collectors
+package models
 
 // ApacheKafka is the object in charge of reading the data stream from the topic
 type ApacheKafka struct {

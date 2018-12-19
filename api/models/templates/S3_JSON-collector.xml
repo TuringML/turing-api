@@ -1,6 +1,6 @@
 <processGroups>
-    <id>d4fe40d9-1ee8-3ef0-0000-000000000000</id>
-    <parentGroupId>26e45e90-f958-3aee-0000-000000000000</parentGroupId>
+    <id>{{ ID }}</id>
+    <parentGroupId>{{ parentGroupID }}</parentGroupId>
     <position>
         <x>16.276585761033743</x>
         <y>143.51065182194154</y>
@@ -1506,6 +1506,6 @@
             <type>org.apache.nifi.processors.standard.LogMessage</type>
         </processors>
     </contents>
-    <name>FromS3JsonToAvro</name>
+    <name>S3_JSON-collector</name>
     <variables/>
 </processGroups>

@@ -1,4 +1,4 @@
-package collectors
+package models
 
 import (
 	"bytes"
@@ -17,12 +17,20 @@ import (
 const (
 	jsonExt         = ".json"
 	jsonContentType = "application/json"
-	csvExt          = ".csv"
-	csvContentType  = "text/csv"
+	// JSONType describes the enum for the json files
+	JSONType       = "JSON"
+	csvExt         = ".csv"
+	csvContentType = "text/csv"
+	// CSVType describes the enum for the csv files
+	CSVType         = "CSV"
 	avroExt         = ".avro"
 	avroContentType = "binary/octet-stream"
-	txtExt          = ".txt"
-	txtContentType  = "text/plain"
+	// AVROType describes the enum for the avro files
+	AVROType       = "AVRO"
+	txtExt         = ".txt"
+	txtContentType = "text/plain"
+	// TXTType describes the enum for the txt files
+	TXTType = "TXT"
 )
 
 // Collectors is the object to encapsulate the various types of
@@ -35,46 +43,40 @@ type Collectors struct {
 	ApacheKafka   *ApacheKafka   `json:"kafka"`
 }
 
+// CollectorScheme contains the information about the collector files type
+type CollectorScheme struct {
+	FilePreview []FilePreview `json:"files_preview"`
+	Collector   Collectors    `json:"collector"`
+	FileType    string        `json:"file_type"`
+}
+
 // PreviewFile returns the list of files of a collector
-func (c *Collectors) PreviewFile() (string, error) {
-	// var files []string
+func (c *Collectors) PreviewFile() (*CollectorScheme, error) {
+	var filesPreview []FilePreview
+	var fileType string
 	if c.S3 != nil {
 		files, err := c.S3.ListFiles()
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 		r, ct, err := c.S3.GetFirstValidObject(files)
 		if err != nil {
-			return "", err
+			return nil, err
 		}
-		return previewFile(r, ct)
+
+		filesPreview, fileType, err = previewFile(r, ct)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	// if c.GCloudStore != nil {
-	// 	files, err := c.GCloudStore.ListFiles()
-	// 	if err != nil {
-	// 		return "", err
-	// 	}
-	// 	r, ct, err := c.GCloudStore.GetFirstValidObject(files)
-	// 	if err != nil {
-	// 		return "", err
-	// 	}
-	// 	return previewFile(r, ct)
-	// }
+	result := &CollectorScheme{
+		FilePreview: filesPreview,
+		Collector:   *c,
+		FileType:    fileType,
+	}
 
-	// if c.AzureDataLake != nil {
-	// 	files, err := c.AzureDataLake.ListFiles()
-	// }
-
-	// if c.HTTP != nil {
-	// 	files, err := c.HTTP.ListFiles()
-	// }
-
-	// if c.ApacheKafka != nil {
-	// 	files, err := c.ApacheKafka.ListFiles()
-	// }
-
-	return "", errors.New("Collector was not set it up correctly")
+	return result, nil
 }
 
 // IsRightExtension determines if the extension read in input is among the accepted ones
@@ -84,20 +86,19 @@ func IsRightExtension(ext string) bool {
 
 // DetermineFile will read a sequence of strings in input and will determine the
 // type of file that the system will be then read
-func previewFile(r io.Reader, ct string) (string, error) {
+func previewFile(r io.Reader, ct string) ([]FilePreview, string, error) {
 	switch ct {
 	case jsonContentType:
 		return handleJSONFile(r)
 	case csvContentType:
 		return handleCSVFile(r)
 	case txtContentType:
-		break
+		return handleTXTFile(r)
 	case avroContentType:
 		return handleAVROFile(r)
 	default:
-		break
+		return nil, "", errors.New("not available content type")
 	}
-	return "", nil
 }
 
 // FilePreview is a struct that will be used to send back to the frontend
@@ -108,17 +109,17 @@ type FilePreview struct {
 	Example   string `json:"example"`
 }
 
-func handleJSONFile(r io.Reader) (string, error) {
+func handleJSONFile(r io.Reader) ([]FilePreview, string, error) {
 	d, err := ioutil.ReadAll(r)
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 
 	var result []FilePreview
 	for _, line := range bytes.Split(d, []byte{'\n'}) {
 		var v map[string]interface{}
 		if err := json.Unmarshal(line, &v); err != nil {
-			return "", err
+			return nil, "", err
 		}
 		for k, v := range v {
 			// TODO: test if string is datetime
@@ -131,12 +132,7 @@ func handleJSONFile(r io.Reader) (string, error) {
 		break
 	}
 
-	out, err := json.Marshal(result)
-	if err != nil {
-		return "", err
-	}
-
-	return string(out), nil
+	return result, JSONType, nil
 }
 
 type field struct {
@@ -152,17 +148,17 @@ type avroSchema struct {
 	Fields []field `json:"fields"`
 }
 
-func handleAVROFile(r io.Reader) (string, error) {
+func handleAVROFile(r io.Reader) ([]FilePreview, string, error) {
 	ocfr, err := goavro.NewOCFReader(r)
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 
 	schema := ocfr.Codec().Schema()
 
 	var s avroSchema
 	if err := json.Unmarshal([]byte(schema), &s); err != nil {
-		return "", err
+		return nil, "", err
 	}
 
 	var result []FilePreview
@@ -175,15 +171,10 @@ func handleAVROFile(r io.Reader) (string, error) {
 		})
 	}
 
-	out, err := json.Marshal(result)
-	if err != nil {
-		return "", err
-	}
-
-	return string(out), nil
+	return result, AVROType, nil
 }
 
-func handleCSVFile(r io.Reader) (string, error) {
+func handleCSVFile(r io.Reader) ([]FilePreview, string, error) {
 	reader := csv.NewReader(r)
 
 	rows := []map[string]string{}
@@ -195,7 +186,7 @@ func handleCSVFile(r io.Reader) (string, error) {
 			break
 		}
 		if err != nil {
-			return "", err
+			return nil, "", err
 		}
 		if header == nil {
 			header = record
@@ -210,7 +201,7 @@ func handleCSVFile(r io.Reader) (string, error) {
 
 	// Empty file or just with header
 	if len(rows) <= 0 {
-		return "", errors.New("empty csv file")
+		return nil, "", errors.New("empty csv file")
 	}
 
 	firstLine := rows[0]
@@ -224,10 +215,9 @@ func handleCSVFile(r io.Reader) (string, error) {
 		})
 	}
 
-	out, err := json.Marshal(result)
-	if err != nil {
-		return "", err
-	}
+	return result, CSVType, nil
+}
 
-	return string(out), nil
+func handleTXTFile(r io.Reader) ([]FilePreview, string, error) {
+	return nil, "", nil
 }

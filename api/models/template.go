@@ -1,10 +1,12 @@
 package models
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 	"time"
+
+	"github.com/turing-ml/turing-api/api/models/collectors"
 
 	"github.com/cbroglie/mustache"
 	uuid "github.com/satori/go.uuid"
@@ -28,9 +30,6 @@ func NewTemplate(name string) *Template {
 		"timestamp":   time.Now().String(),
 	}
 
-	pwd, _ := os.Getwd()
-	fmt.Print(pwd)
-
 	t, err := mustache.RenderFile("../models/templates/skeleton.xml", context)
 	if err != nil {
 		return nil
@@ -38,7 +37,7 @@ func NewTemplate(name string) *Template {
 
 	return &Template{
 		Workflow: t,
-		GroupID:  groupID,
+		GroupID:  groupID, // it will be the parentGroupID of all the processors
 		Snippet:  "",
 	}
 }
@@ -120,6 +119,38 @@ func (t *Template) doStorer(node *NodeGraph, sbt SubType) error {
 	3. Add the newly created XML to the Main template file
 */
 func (t *Template) doS3Collector(node *NodeGraph) error {
+	var s3 models.S3
+	err := json.Unmarshal(node.Node.Configuration.Blob, &s3)
+	if err != nil {
+		return err
+	}
+
+	err = s3.NewClient()
+	if err != nil {
+		return err
+	}
+
+	c := models.Collectors{
+		S3: &s3,
+	}
+
+	cs, err := c.PreviewFile()
+	if err != nil {
+		return err
+	}
+
+	context := map[string]string{
+		"ID":            uuid.Must(uuid.NewV4()).String(),
+		"ParentGroupID": t.GroupID,
+	}
+
+	snippet, err := mustache.RenderFile(fmt.Sprintf("S3_%s-collector.xml", cs.FileType), context)
+	if err != nil {
+		return err
+	}
+
+	t.Snippet += snippet
+
 	return nil
 }
 

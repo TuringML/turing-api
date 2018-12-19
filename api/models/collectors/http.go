@@ -1,4 +1,4 @@
-package collectors
+package models
 
 // HTTP is the object that can read from an http data
 type HTTP struct {
